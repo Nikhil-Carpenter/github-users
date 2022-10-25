@@ -1,41 +1,12 @@
 import React,{useState,useEffect} from 'react';
 import spinner from "../assets/spinner1.jpg";
+import useFetch from './useFetch';
 const url = "https://api.github.com/users";
 
 
 const GithubUsers = () => {
 
-    const [users,setUsers] = useState([]);
-    const [isLoading,setIsLoading] = useState(true);
-    const [error,setError] = useState(false);
- 
-
-    const getUsers= async()=>{
-        setError(false);
-        setIsLoading(true);
-
-        try{
-            let response = await fetch(url)
-
-            if(!response.ok){
-                throw new Error("Something went wrong!!!")
-            }
-
-            let data = await response.json();
-            setUsers(data)
-            setIsLoading(false)
-
-        }catch(err){
-            console.log(err.message)
-            setError(true)
-            setIsLoading(false)
-        }
-    }
-
-    useEffect(() => {
-        getUsers();
-    }, [])
-    
+    const { data ,error,isLoading } = useFetch(url);
 
 
   return (
@@ -60,7 +31,7 @@ const GithubUsers = () => {
                 error?(
                     <h4 className='--text-center --py --text-white'>Something went wrong!!!</h4>
                 ):(
-                    users.map((user)=>{
+                    data.map((user)=>{
                         return(
                             <div key={user.id} className='--card --bg-white --align-center --p --flex-start'>
                                 <img src={user.avatar_url} alt="userimg" className='--mx --profile-img'/>
